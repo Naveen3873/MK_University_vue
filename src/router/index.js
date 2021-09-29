@@ -22,9 +22,16 @@ import sendResponse from '../components/clglogin/sendResponse'
 import viewStudentsRequests from '../components/clglogin/viewStudentsRequests'
 import feedback from '../components/clglogin/feedback'
 
+import studentsPage from '../components/studentsPage'
+
 Vue.use(VueRouter)
 
 const routes = [
+        {
+          path: '/studentsPage',
+          name: 'studentsPage',
+          component: studentsPage
+        },
         {
           path: '/',
           name: 'homePage',
