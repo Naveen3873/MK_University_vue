@@ -5,7 +5,7 @@
         <div>
            <b-form-radio-group v-model="selected">           
                 <b-container>
-                <b-row>
+                <b-row> 
                 <b-col>        
                  <b-form-radio v-model="selected" v-bind:value="1">Admin</b-form-radio>
                 </b-col>

@@ -1,8 +1,17 @@
 <template>
 <div>
  <b-container>
+     <div>   
         <p class="display-4 text-primary mt-5 mx-5">STUDENTS PAGE</p>
-       <div class="table-responsive"> 
+        <div>
+             <b-form-input v-model="student.name" placeholder="Enter name"></b-form-input>
+             <b-form-input v-model="student.age" placeholder="Enter age"></b-form-input>
+             <b-form-input v-model="student.gender" placeholder="Enter gender"></b-form-input>
+             <b-form-input v-model="student.email" placeholder="Enter email"></b-form-input>
+             <button class="btn btn-primary mt-3" @click=getStudent()>submit</button>
+        </div>
+     </div>
+     <div>
        <table class="table table-striped table-bordered border-primary table-hover text-center">
             <thead class="table-dark">
                 <tr>
@@ -13,15 +22,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="x in student" :key="x.name">
-                    <td>{{ x.name }}</td>
-                    <td>{{ x.age }}</td>
-                    <td>{{ x.gender }}</td>
-                    <td>{{ x.email }}</td>
+                <tr v-for="s in students" :key="s.id">
+                    <td>{{s.name}}</td>
+                    <td>{{s.age}}</td>
+                    <td>{{s.gender}}</td>
+                    <td>{{s.email}}</td>
                 </tr>
             </tbody>
         </table>
-        </div>
+     </div>   
   </b-container>
 </div>
 </template>
@@ -32,40 +41,81 @@ export default {
     name: "studentPage",
     data(){
         return{
-            student: null
+            student:{
+                id: '',
+                name: '',
+                age: '',
+                gender: '',
+                email: '',
+                submitForm: null
+            },
+            students: ''
         }
     },
     mounted(){
-        this.getStudent();
+        this.getAllStudents();
     },
     methods:{
         getStudent: function(){
+            var authAxios = axios.create({
+            baseURL: "http://localhost:9090",
+            });
+            let config = {
+                headers: {
+                   "Content-Type": "application/json"
+                }
+            };
+            let data ={
+                name: this.student.name,
+                age: this.student.age,
+                gender: this.student.gender,
+                email: this.student.email                
+            };            
+            return new Promise((resolve, reject) => {
+            authAxios
+                .post("/student/insert", data, config)
+                .then(response => {
+                    alert("insert successfully"),
+                    this.name= "",
+                    this.age= "",
+                    this.gender= "" ,
+                    this.email= "",
+                    resolve(response);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+            });
+        },
+        getAllStudents : function(){
             var ax = axios.create({
-                baseURL: "http://localhost:8080",
+                baseURL: "http://localhost:9090",
             });
             return new Promise((resolve, reject) => {
                 ax({
                     method: 'get',
-                    url: '/student/get',
+                    url: '/student/getAll',
                 }).then((response) => {
-                    this.student = response.data;
-                    console.log(this.student);
+                    this.students = response.data;
+                    console.log(this.getAllStudents());
                     resolve(response);
                 }).catch((err) => {
                     reject(err);
                 });
             });
-            // myfun(resolve, reject){
-            // }
-            // return new Promise((resolve, reject)=>{
-            // });
-            // ax({
-            // }.then((response)=>{
-            // }).catch((err)=>{
-            // });
-        }
+        }           
     }
 }
+/*
+             myfun(resolve, reject){
+             }
+             return new Promise((resolve, reject)=>{
+             });
+             ax({
+             }.then((response)=>{
+             }).catch((err)=>{
+             });
+*/  
 </script>
 
 <style>
