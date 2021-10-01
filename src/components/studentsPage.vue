@@ -8,10 +8,10 @@
              <b-form-input v-model="student.age" placeholder="Enter age"></b-form-input>
              <b-form-input v-model="student.gender" placeholder="Enter gender"></b-form-input>
              <b-form-input v-model="student.email" placeholder="Enter email"></b-form-input>
-             <button class="btn btn-primary mt-3" @click=getStudent()>submit</button>
+             <button class="btn btn-primary mt-3" @click=putStudent()>submit</button>
         </div>
      </div>
-     <div>
+     <div class="mt-2">
        <table class="table table-striped table-bordered border-primary table-hover text-center">
             <thead class="table-dark">
                 <tr>
@@ -56,36 +56,31 @@ export default {
         this.getAllStudents();
     },
     methods:{
-        getStudent: function(){
-            var authAxios = axios.create({
-            baseURL: "http://localhost:9090",
-            });
-            let config = {
-                headers: {
-                   "Content-Type": "application/json"
-                }
-            };
-            let data ={
-                name: this.student.name,
-                age: this.student.age,
-                gender: this.student.gender,
-                email: this.student.email                
-            };            
-            return new Promise((resolve, reject) => {
-            authAxios
-                .post("/student/insert", data, config)
-                .then(response => {
-                    alert("insert successfully"),
-                    this.name= "",
-                    this.age= "",
-                    this.gender= "" ,
-                    this.email= "",
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
+        putStudent: function(){
+                   var authAxios = axios.create({
+                    baseURL: "http://localhost:9090",
                 });
-            });
+                let config = {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                };
+                return new Promise((resolve, reject) => {
+                    authAxios
+                        .post("/student/insert",this.student, config)
+                        .then(response => { 
+                             alert(response.data);  
+                             this.getAllStudents();
+                             this.student.name = "";
+                             this.student.age = "";
+                             this.student.gender = "";
+                             this.student.email = "";                 
+                            resolve(response);
+                        })
+                        .catch(err => {
+                            reject(err);
+                        });
+                });
         },
         getAllStudents : function(){
             var ax = axios.create({
@@ -97,7 +92,7 @@ export default {
                     url: '/student/getAll',
                 }).then((response) => {
                     this.students = response.data;
-                    console.log(this.getAllStudents());
+                    console.log(this.students());
                     resolve(response);
                 }).catch((err) => {
                     reject(err);
@@ -106,6 +101,7 @@ export default {
         }           
     }
 }
+      
 /*
              myfun(resolve, reject){
              }
